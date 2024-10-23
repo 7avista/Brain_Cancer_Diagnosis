@@ -46,8 +46,7 @@ In order to eventually be compatible with the OEB infrastructure, benchmarking w
 ### Directory structure for benchmarking workflow code
 
 ```bash
-
-benchmarking_workflows/
+[benchmarking-event]/
    |- README.md
    |- main.nf
    |- nextflow.config
