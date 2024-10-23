@@ -48,40 +48,35 @@ In order to eventually be compatible with the OEB infrastructure, benchmarking w
 ```bash
 
 benchmarking_workflows/
-    |- [benchmarking_event]/
+   |- README.md
+   |- main.nf
+   |- nextflow.config
+   |- parameters_file.config
+   |- specification/
+        |- example_files/
+        |- specification.md
+   |- docker_recipes/
         |- README.md
-        |- main.nf
-        |- nextflow.config
-        |- parameters_file.config
-        |- specification/
-            |- example_files/
-            |- specification.md
-        |- docker_recipes/
-            |- README.md
-            |- build.sh
-            |- validation/
-                |- Dockerfile
-                |- requirements.txt
-                |- validation.py
-                |- ...
-            |- metrics/
-                |- Dockerfile
-                |- requirements.txt
-                |- compute_metrics.py
-                |- ...
-            |- consolidation/
-                |- Dockerfile
-                |- requirements.txt
-                |- aggregation.py
-                |- merge_data_model_files.py
-                |- ...
-                |- assessment_chart/
-                    |- assessment_chart.py
-                    |- ...  
-...
-utils/
-    |- apaeval/
-        |-  src/apaeval/main.py   
+        |- build.sh
+        |- validation/
+            |- Dockerfile
+            |- requirements.txt
+            |- validation.py
+            |- ...
+        |- metrics/
+            |- Dockerfile
+            |- requirements.txt
+            |- compute_metrics.py
+            |- ...
+        |- consolidation/
+            |- Dockerfile
+            |- requirements.txt
+            |- aggregation.py
+            |- merge_data_model_files.py
+            |- ...
+            |- assessment_chart/
+                |- assessment_chart.py
+                |- ...  
 ```
 
 Within such a directory we find the `main.nf` and `nextflow.config` files, which specify the workflow and all its event-specific parameters, respectively, as well as an optional `parameters_file.config`, which contains the *input file(s)*, *participant name* and *challenge ID(s)* for a particular participant and allows running the workflow with it. The `participant name` that you define here and passed as an argument for your *tool/model* will be appearing on OEB plots after uploading the results there.
