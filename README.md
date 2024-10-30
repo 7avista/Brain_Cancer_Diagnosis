@@ -32,7 +32,7 @@ Within a benchmarking event, one or more ***challenges*** will be performed. A *
 
 In order to compare the performance of the participants within a challenge/event, the respective benchmarking workflow will be run on `input files` from all the eligible participants. The calculated merics will be written to `JSON`files which can be eventually submitted to OEB for database storage.
 
-> *In EuCanImage, the Brain Cancer Diagnosis benchmarking event example may consist of three challenges:  **Detection, Segmentation, and Classification** (Detection and Classification are not implemented yet in the benchmarking workflow of the event). Likewise, a software tool or participant (i.e. AI model inference) can participate in one or several events, depending on its functions.*
+> *In EuCanImage, the Brain Cancer Diagnosis benchmarking event example may consist of three challenges:  **Detection, Segmentation, and Classification** (Detection and Classification are not implemented yet in this benchmarking workflow of Brain Cancer Diagnosis event). Likewise, a software tool or participant (i.e. AI model inference) can participate in one or several events, depending on its functions.*
 
 ## Benchmarking workflow general description
 
@@ -51,9 +51,29 @@ In order to eventually be compatible with the OEB infrastructure, benchmarking w
    |- main.nf
    |- nextflow.config
    |- parameters_file.config
-   |- specification/
+   |- LICENSE
+   |- CODE_OF_CONDUCT.md
+   |- PULL_REQUEST_TEMPLATE.md
+   |- README.md
+   |- input_data/
+        |- minimal_aggregation_template.json
+        |- goldstandard_dir/
+            |- gt_IXI002-Guys-0828-T1.nii.gz
+            |- gt_IXI012-HH-1211-T1.nii.gz
+            |- gt_IXI013-HH-1212-T1.nii.gz
+            |- ...
+        |- participant_dir/
+            |- brain.nii.tar.gz
+   |- Specification/
         |- example_files/
-        |- specification.md
+            |- aggregation_ECtest.json
+            |- aggregation_out.json
+            |- assessment_G_STD.json
+            |- assessment_out.json
+            |- brain_IXI014-HH-1236-T1.nii.gz
+            |- brain_IXI015-HH-1258-T1.nii.gz
+            |- ...
+        |- Brain_Cancer_Diagnosis_specification.md
    |- docker_recipes/
         |- README.md
         |- build.sh
@@ -78,19 +98,28 @@ In order to eventually be compatible with the OEB infrastructure, benchmarking w
                 |- ...  
 ```
 
-Within such a directory we find the `main.nf` and `nextflow.config` files, which specify the workflow and all its event-specific parameters, respectively, as well as an optional `parameters_file.config`, which contains the *input file(s)*, *participant name* and *challenge ID(s)* for a particular participant and allows running the workflow with it. The `participant name` that you define here and passed as an argument for your *tool/model* will be appearing on OEB plots after uploading the results there.
+Within the main directory we find the `main.nf` and `nextflow.config` files, which specify the workflow and all its event-specific parameters, as well as an optional `parameters_file.config`, which contains the *input file(s)*, *participant name* and *challenge ID(s)* for a particular participant and allows running the workflow with it. The `participant name` that you define here and passed as an argument for your *tool/model* will be appearing on OEB plots after uploading the results there.
 
-main.nf`ideally does NOT have to be changed (at least not much) between benchmarking events, as it simply connects the three steps`validation`, `metrics`and`consolidation`inherent to the OEB workflow structure. In contrast, file and tool names have to be adapted in`[participant]_[event].config ` for dedicated workflow runs, as well as other dedicated benchmarking event names used for output files parsing.
+
+main.nf`ideally does NOT have to be changed (at least not much) between benchmarking events, as it simply connects the three steps`validation`, `metrics`and`consolidation`inherent to the OEB workflow structure. In contrast, `input file(s)' and 'tool' names have to be adapted in 'nextflow.config' and in `[participant]_[event].config ` for dedicated workflow runs, as well as other benchmarking event names used for output files parsing, and dedicated specific workflow parameters.
 
 > ATTENTION: Keep `nextflow.config` unchanged within an event, in order to be able to directly compare the different participant runs
 
-Within the benchmarking event's directory resides a subdirectory `specification` with a detailed description of required input and output file formats, as well as of the metrics to be calculated for the respective benchmarking event. The *actual code* is hidden in the directory `docker_recipes`; For each of the three benchmarking workflow steps required by OEB, a separate docker container will be built:
+Within the benchmarking event's directory resides a subdirectory `specification` with a detailed description of required input and output file formats in `Brain_Cancer_Diagnosis_specification.md`, as well as of the metrics to be calculated for the respective benchmarking event. In order to create datasets that are compatible with the [Elixir Benchmarking Data Model][elixir-data-model], some examples of these file can be found inside example_files subdirectory, where `*_out.json` files are the datasets retrieved by this workflow, whereas other equivalent files for different community' events are also available. Some of the original predicted output files that are part of the compressed input file are also found in this folder.
+  
+
+The participant_dir which holds the compressed `input_file`, the ground truth files in the `goldstandar_dir`and the `minimal_aggregation_template.json` template file, all actually residing in the `input_data` directory of the benchamarking workflow directory (Brain_Cancer_Diagnosis)`baseDir`. The template file is consumed by the benchmark_consolidation process in the consolidation step to recreate the consolidated result output, which also specifies the metrics and visualizations to be obtained at each respective challenge of the event. In order, to modify these visualizations the template must be updated accordingly, since when running the workflow locally, this template will emulate the information gathered at the OpenEBench database, where if other participants are also presente, the final consolidated file will also show the results of these participants as well. However, locally and in absence of any other participant, you will be able to obtain the participant's consolidation file.
+
+The *actual code* is hidden in the directory `docker_recipes`. For each of the three benchmarking workflow steps required by OEB, a separate docker container will be built:
 
 1. validation
 2. metrics
 3. consolidation
 
-The *docker* directories contain Dockerfiles, requirements, constraints, and dedicated python scripts. In order to create datasets that are compatible with the [Elixir Benchmarking Data Model][elixir-data-model], the `input_file`, the ground truth files in the `goldstandar_dir`and the`JSON`template, all actually residing as example in the `input_dir`  of the benchamarking workflow directory (Brain_Cancer_Diagnosis)`baseDir` arguments are received by the respective docker containers. The provided *python scripts* are where the action happens: **These scripts are where you most likely will have to make adjustments for different benchmarking events**.
+The *docker* directories contain Dockerfiles, requirements, constraints, and dedicated python scripts, arguments are received by the respective docker containers. The provided *python scripts* are where the action happens: **These scripts are where you most likely will have to make adjustments for different benchmarking events**.
+
+
+
 
 ## (File) naming requirements
 
@@ -149,7 +178,7 @@ brain_[].nii.gz
 
 Metrics
 
-Metrics names MUST be **exactly** the same in the respective `compute_metrics.py` and `aggregation_minimal_template.json` file of a benchmarking workflow. These metrics names will then appear in the resulting `JSON` files of the workflow, and will be appearing on OEB plots after uploading the results there.
+Metrics names MUST be **exactly** the same in the respective `compute_metrics.py` and `minimal_aggregation_template.json` file of a benchmarking workflow. These metrics names will then appear in the resulting `JSON` files of the workflow, and will be appearing on OEB plots after uploading the results there.
 
 #### Examples:
 
@@ -186,7 +215,7 @@ Update the corresponding `requirements.txt`, `constraints.txt` and `Dockerfile` 
 
 ### 4. Consolidation
 
-The`JSON` outputs from the first two steps will be gathered here, and *aggregation objects* for OEB vizualisation will be created based on the `aggregation_minimal_template.json`. Thus, this is the file you need to adapt in order to control which metrics are plotted and which will be the plots in OEB. You can set visualization types for local plotting in [`manage_assessment_data.py`][assess-py]. The current python scripts have been copied from [TCGA_benchmarking_dockers](https://github.com/inab/TCGA_benchmarking_dockers), and only support 2D plots with x and y axes.
+The`JSON` outputs from the first two steps will be gathered here, and *aggregation objects* for OEB vizualisation will be created based on the `minimal_aggregation_template.json`. Thus, this is the file you need to adapt in order to control which metrics are plotted and which will be the plots in OEB. You can set visualization types for local plotting in [`manage_assessment_data.py`][assess-py]. The current python scripts have been copied from [TCGA_benchmarking_dockers](https://github.com/inab/TCGA_benchmarking_dockers), and only support 2D plots with x and y axes.
 
 ### 5. Adapt `nextflow.config` and `main.nf`
 

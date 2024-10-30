@@ -11,10 +11,10 @@ def main(args):
     # input parameters
     metrics_data = args.metrics_data
     validation_data = args.validation_data
-    aggregation_data = args.aggregation_data
-    manifest_data = os.path.join(aggregation_data, "Manifest.json")
     challenges = args.challenges_ids
     outdir = args.outdir
+    consolidated_result = args.consolidated_result
+    manifest_data = os.path.join(outdir, "Manifest.json")
 
     # Nextflow passes list, python reads string. We need python lists
     metrics_data = [m.strip('[').strip(']').strip(',') for m in metrics_data]
@@ -39,14 +39,12 @@ def main(args):
     # we have to do that for all challenges in the list
     for challenge in challenges:
         challenge = challenge.replace('.', '_')
-        c_aggregation_data = os.path.join(aggregation_data, challenge)
+        c_aggregation_data = os.path.join(outdir, challenge)
         data_model_file = join_json_files(c_aggregation_data, data_model_file, "*" + challenge + "*.json")
 
     # write the merged data model file to json output
-    with open(outdir, mode='w', encoding="utf-8") as f:
+    with open(consolidated_result, mode='w', encoding="utf-8") as f:
         json.dump(data_model_file, f, sort_keys=True, indent=4, separators=(',', ': '))
-
-    print(f"Output file path: {outdir}")
 
 def join_json_files(data_directory, data_model_file, file_extension):
     '''Add contents of specified file(s) to given json file
@@ -89,10 +87,9 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("-v", "--validation_data", nargs="+", help="path to validated_participant_data.json", required=True)
     parser.add_argument("-m", "--metrics_data", nargs="+", help="path to assessment_datasets.json", required=True)
-    parser.add_argument("-a", "--aggregation_data", help="dir where the data for benchmark summary/aggregation are stored",
-                        required=True)
     parser.add_argument("-c", "--challenges_ids", help="Ids of the challenges, separated by space", nargs='+', required=True)
-    parser.add_argument("-o", "--outdir", help="output path where the minimal dataset JSON file will be written", required=True)
+    parser.add_argument("-a", "--outdir", help="output path where the minimal dataset JSON file will be written", required=True)
+    parser.add_argument("-o", "--consolidated_result", help="Path to the consolidated result JSON file", required=True)
 
     args = parser.parse_args()
 

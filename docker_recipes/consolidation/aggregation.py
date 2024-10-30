@@ -45,7 +45,7 @@ def parse_arguments():
         "--template",
         help="path to the aggregation template",
         #default=os.path.join(os.path.dirname(
-        #    os.path.realpath(__file__)), "aggregation_minimal_template.json"),
+        #    os.path.realpath(__file__)), "aggregation_aggregation_template.json"),
         required=True
     )
     return parser

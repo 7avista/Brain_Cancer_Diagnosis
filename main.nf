@@ -95,11 +95,11 @@ process validation {
 	publishDir outdir,
 	mode: 'copy',
 	overwrite: false,
-	saveAs: { filename -> "validated_${input_file.baseName}.json" }
+    saveAs: { filename -> "validated_participant_data.json" }
 
-    // Publish validation_result copy in VRE only
+    // Publish validation_result copy in OEB VRE only
 	publishDir validation_result.parent,
-	mode: 'link',
+	mode: 'copy',
 	overwrite: false,
     saveAs: { filename -> 
 		def DEFAULT_VALIDATION_RESULT = "${params.outdir}/validated_participant_data.json"
@@ -120,8 +120,8 @@ process validation {
 	path goldstandard_dir
 	
 	output:
-	path "validated_${input_file.baseName}.json", emit: validation_file
-    val task.exitStatus, emit: validation_status
+    path "validated_participant_data.json", emit: validation_file
+	val task.exitStatus, emit: validation_status
 			
 	"""
 	python3 /app/validation.py -i $input_file -com $community_id -c $challenges_ids -e $event_id -p $participant_id -g $goldstandard_dir 
@@ -136,11 +136,11 @@ process compute_metrics {
 	publishDir outdir,
 	mode: 'copy',
 	overwrite: false,
-	saveAs: { filename -> "assessment_results_${input_file.baseName}.json" }
+    saveAs: { filename -> "assessment_datasets.json" }
 
-    // Publish assessment_results copy in VRE only
+    // Publish assessment_results copy in OEB VRE only
 	publishDir assessment_results.parent,
-	mode: 'link',
+	mode: 'copy',
 	overwrite: false,
 	saveAs: { filename -> 
 		def DEFAULT_ASSESSMENT_RESULTS = "${params.outdir}/assessment_datasets.json"
@@ -158,15 +158,17 @@ process compute_metrics {
 	val participant_id
 	val community_id
 	val event_id
+	path assessment_results
 
 	output:
-	path "assessment_results_${input_file.baseName}.json", emit: ass_json
-
+    path "assessment_datasets.json", emit: ass_json
+	
 	when:
 	validation_status == 0
 
 	"""
-	python3 /app/compute_metrics.py -i $input_file -c $challenges_ids -e $event_id -g $goldstandard_dir -p $participant_id -com $community_id -o assessment_results_${input_file.baseName}.json
+	python3 /app/compute_metrics.py -i $input_file -c $challenges_ids -e $event_id -g $goldstandard_dir -p $participant_id -com $community_id -o $assessment_results
+	
 	"""
 }
 
@@ -179,15 +181,16 @@ process benchmark_consolidation {
 	overwrite: false,
 	saveAs: { filename -> "consolidated_result.json" }
 
+    // Publish consolidated_result copy in OEB VRE only
 	publishDir consolidated_result.parent,
-	mode: 'link',
+	mode: 'copy',
 	overwrite: false,
-    saveAs: { filename -> 
+	saveAs: { filename -> 
 		def DEFAULT_CONSOLIDATED_RESULT = "${params.outdir}/consolidated_result.json"
 		// Convert both paths to absolute paths for comparison
+        def fullConsolidatedResultPath = consolidated_result.toString()
         def fullDefaultConsolidatedResultPath = DEFAULT_CONSOLIDATED_RESULT.toString()
-		def fullConsolidatedResultPath = consolidated_result.toString()
-       return (fullConsolidatedResultPath == DEFAULT_CONSOLIDATED_RESULT) ? null : consolidated_result.name
+        return fullConsolidatedResultPath == fullDefaultConsolidatedResultPath ? null : consolidated_result.name
 	}
 
 	input:
@@ -196,13 +199,14 @@ process benchmark_consolidation {
 	path validation_file
 	path template_path
 	val challenges_ids
+	path consolidated_result
 	
 	output:
-	path "consolidated_result.json"
+	path consolidated_result
 	
 	"""
 	python /app/aggregation.py -a $ass_json -e $event_id -o $outdir -t $template_path
-	python /app/merge_data_model_files.py -v $validation_file -m $ass_json -c $challenges_ids -a $outdir -o consolidated_result.json 
+	python /app/merge_data_model_files.py -v $validation_file -m $ass_json -c $challenges_ids -a $outdir -o $consolidated_result
 	"""
 
 }
@@ -229,7 +233,8 @@ workflow {
 		goldstandard_dir,
 		participant_id,
 		community_id,
-		event_id
+		event_id,
+		assessment_results
 	)
 	assessments = compute_metrics.out.ass_json.collect()
 
@@ -238,7 +243,8 @@ workflow {
 		event_id,
 		validations,
 		template_path,
-		challenges_ids
+		challenges_ids,
+		consolidated_result
 	)
 }
 
