@@ -98,15 +98,17 @@ Calculated metrics are saved in JSON file adhering to OpenEBench schema.
 Assessment output is generated for each tool separately and contains values of calculated metrics for a given input dataset.
 Aggregation output contains summarized metrics values from all benchmarked tools for all plots of the given challenge.
 Consolidation output combines assessment data for the participant currently benchmarked with aggregation of previously benchmarked participants and will be uploaded to the OEB DB.
+Results example contains a minimal dataset for one benchmarking event collecting all participants, and challenges; and composed of participant, aggregation, and assessment datasets, among other required data. Example for one existing community is available.
 
 
 | # | Format | Link                       | Example data            | Description               |
 | :- | :----- | :------------------------- | :---------------------- | :------------------------ |
 | 1 | JSON   | [Specification][spec-json] | [Link][assessment_out]  | Assessment output JSON    |
 | 1 | JSON   | [Specification][spec-json] | [Link][assessment_G_STD]  | Assessment output JSON    |
-| 1 | JSON   | [Specification][spec-json] | [Link][aggregation_out]  | Aggregation output JSON    |
-| 1 | JSON   | [Specification][spec-json] | [Link][aggregation_ECtest]  | Aggregation output JSON    |
-| 3 | JSON   | [Specification][spec-json] | N/A                     | Consolidation output JSON |
+| 2 | JSON   | [Specification][spec-json] | [Link][aggregation_out]  | Aggregation output JSON    |
+| 2 | JSON   | [Specification][spec-json] | [Link][aggregation_ECtest]  | Aggregation output JSON    |
+| 3 | JSON   | [Specification][spec-json] | [Link][consolidation_out]  | Consolidation output JSON    |
+| 4 | JSON   | [Specification][spec-json] | [Link][results_example]  | Results example JSON    |
 
 ### Additional info
 
@@ -147,4 +149,6 @@ The OpenEBench consolidation file contains all the information about the new ben
 [assessment_G_STD]: ./example_files/assessment_G_STD.json
 [aggregation_out]: ./example_files/aggregation_out.json
 [aggregation_ECtest]: ./example_files/aggregation_ECtest.json
+[consolidation_out]: ./example_files/consolidation_out.json
+[results_example]: ./example_files/results_example.json
 [wiki-NIfTI]: https://en.wikipedia.org/wiki/Neuroimaging_Informatics_Technology_Initiative
