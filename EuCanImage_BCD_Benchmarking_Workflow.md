@@ -59,7 +59,7 @@ _OpenEBench parameter(s)'name(s) defintions are case sensitive and will be integ
 
 ## (File) naming requirements
 
-See description in [the main benchmarking workflow [`README.md`][readme-bwf-naming].
+See description in [the main benchmarking workflow [`README.md`][readme-naming].
 
 ## Description of steps
 
@@ -94,15 +94,13 @@ See description in [the main benchmarking workflow [`README.md`][readme-bwf-nami
 
 ## Usage
 
-Please check out the sections on [building docker images][build-images] and [running the benchmarking workflow][run-workflow] in the main EuCanImage benchmarking workflow [README][readme-bwf].
+Please check out the sections on [building docker images][build-images] and [running the benchmarking workflow][run-workflow] in the main EuCanImage benchmarking workflow [README][readme].
 
 [//]: #
-[readme-bwf]: ../README.md
-[readme-bwf-naming]: ../README.md#how-to-file-naming-requirements
-[build-images]: ../README.md#7-build-images
-[run-workflow]: ../README.md#8-test-run
+[readme]: ./README.md
+[readme-naming]: ../README.md#how-to-file-naming-requirements
+[build-images]: ./README.md#7-build-images
+[run-workflow]: ./README.md#8-test-run
 [spec]: ./specification/
 [validation-py]: ./docker_recipes/validation/validation.py
 [metrics-py]: ./docker_recipes/metrics/compute_metrics.py
-[nextflow-config]: ./nextflow.config
-[parameters-file-config]: ./parameters_file.config
