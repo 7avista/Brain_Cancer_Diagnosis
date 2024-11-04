@@ -40,7 +40,7 @@ In order to compare the performance of the participants within a challenge/event
 
 ## Benchmarking workflow general description
 
-In a first step the provided input files are **validated**. Subsequently, all specified **metrics** are computed, using the matched ground truth files, if applicable. Finally, the **results** are gathered in OEB specific `minimal dataset JSON` files per participant.
+In a first step the provided input files are validated. Subsequently, all specified metrics are computed, using the matched ground truth files, if applicable. Finally, the results are gathered in OEB specific `minimal dataset JSON` files per participant.
 Based on the created `JSON` files, results can be vizualized on OEB per challenge, such that performance of participants can be compared for each metric.
 
 In order to eventually be compatible with the OEB infrastructure, benchmarking workflows are written in `Nextflow` and are structured in a predefined manner that will be described in the following sections.
@@ -103,7 +103,7 @@ In order to eventually be compatible with the OEB infrastructure, benchmarking w
                 |- ...  
 ```
 
-Within the main directory we find the [`main.nf`](main-nf) and [`nextflow.config`][nextflow-config] files, which specify the workflow and all its event-specific parameters, as well as an optional [`parameters_file.config`][parameters-file], which contains the *input file(s)*, *participant name* and *challenge ID(s)* for a particular participant and allows running the workflow with it. The `participant name` that you define here and passed as an argument for your *tool/model* will be appearing on OEB plots after uploading the results there.
+Within the main directory we find the [main.nf](main-nf) and [nextflow.config][nextflow-config] files, which specify the workflow and all its event-specific parameters, as well as an optional [parameters_file.config][parameters-file], which contains the *input file(s)*, *participant name* and *challenge ID(s)* for a particular participant and allows running the workflow with it. The `participant name` that you define here and passed as an argument for your *tool/model* will be appearing on OEB plots after uploading the results there.
 
 
 `main.nf` ideally does NOT have to be changed (at least not much) between benchmarking events, as it simply connects the three steps`validation`, `metrics` and`consolidation` inherent to the OEB workflow structure. In contrast, `input file(s)` and `tool` names have to be adapted in `nextflow.config`, as well as other benchmarking event names used for output files parsing, and dedicated specific workflow parameters.
@@ -132,11 +132,7 @@ The *docker* directories contain Dockerfiles, requirements, constraints, and ded
 
 Challenge acronym has to be in the specific format as specified by the community. These acronyms will be appearing on OEB plots after uploading the results there.
 
-> *In EuCanImage example it has to be in the form:*
-
-```
-ECI_UC[#]_[Detect OR Seg OR Class]
-```
+> *In EuCanImage example it has to be in the form:* `ECI_UC[#]_[Detect OR Seg OR Class]`
 
 > where `ECI`is the abbreviation of EuCanImage and it is followed by `UC[#]` for the use case number acronym, and followed by the challenge abbreviation (*Detect* for Detection, *Seg* for Segmentation, and *Class* for Classification).
 
@@ -177,8 +173,7 @@ Metrics names MUST be **exactly** the same in the respective [compute_metrics.py
 
 #### Examples:
 
-`False Positive Rate (FPR)`
-`DSC (Dice Similarity Coefficients)` 
+`FPR` (False Positive Rate) or `DSC` (Dice Similarity Coefficients) 
 
 ## HOW TO: DEVELOP
 
@@ -186,7 +181,7 @@ For an example of a benchmarking workflow and further instructions, refer to the
 
 ### 1. Copy template
 
-If not done so already, copy the whole contents of the `Brain_Cancer_Diagnosis` directory into the directory for your new benchmarking event. Specify the objectives of your event by adapting the contents of [specification`][spec].
+If not done so already, copy the whole contents of the `Brain_Cancer_Diagnosis` directory into the directory for your new benchmarking event. Specify the objectives of your event by adapting the contents of [specification][spec].
 
 ### 2. Establish proper validation
 
@@ -244,18 +239,18 @@ nextflow run main.nf -profile docker --participant_id TOOL --challenges_ids ECI_
 
 ```bash
 nextflow run main.nf -profile docker --participant_id test_tool  --challenges_ids ECI_UC0_Seg (--outdir your/preferred/outdir/)
-# --outdir argument will be redirected to default
 ```
+`outdir` argument will be redirected to default
 
 # Or for running with configuration file:
 ```bash
 nextflow run main.nf -profile docker -c parameters_file.config
-# parameters_file.config if not customized will use participant and challenge arguments set by default
 ```
+`parameters_file.config`, if not customized, will use participant and challenge arguments set by default
 
 > NOTE: Parameters from the [nextflow.config][nextflow-config] file are read *in addition* to the ones specified with the `-c` flag, but the latter will override any parameters of the same name in the nextflow.config.  See Nextflow [Configuration](https://www.nextflow.io/docs/latest/config.html) for more information on parameters priority configuration.
 
-## HOW TO: "PRODUCTION"
+## HOW TO: PRODUCTION
 
 When you have completed the steps described above you can finally run the benchmarking workflow on real data. Below are some hints to help you get going.
 
@@ -269,7 +264,7 @@ You're going to run the workflow for one participant at a time, but you can spec
 
 ### 3. Containers & images
 
-Make sure you have the images appropriate for your system ready. If you're running docker you can use the images you built locally in the sections [build images][build-images] in the docker_recipes directory[README][dr-readme]. Make sure to rename the images (see bash command below) and adjust the paths in the `nextflow.config` accordingly. 
+Make sure you have the images appropriate for your system ready. If you're running docker you can use the images you built locally in the sections [build images][build-images] in the docker_recipes directory [README][dr-readme]. Make sure to rename the images (see bash command below) and adjust the paths in the `nextflow.config` accordingly. 
 
 Please check out the sections on [update images][update-images] in the docker_recipes directory [README][dr-readme].
 
