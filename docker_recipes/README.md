@@ -3,7 +3,7 @@
 **Brain Cancer Diagnosis Docker declarations** to be used with the [OEB compatible Nextflow benchmarking workflow][main-nf]*.
 ---
 
-This README is a brief recap of the three OpenEBench (OEB) benchmarking workflow steps that are computed in their individual containers. For a general introduction to **OpenEBench benchmarking workflows** see the main benchmarking workflow [`README`][readme]. For a more detailed description on the example EuCanImage Brain Cancer Diagnosis Benchmarking Workflow see [`Brain Cancer Diagnosis benchmarking workflow readme`][bcd-bwf].
+This README is a brief recap of the three OpenEBench (OEB) benchmarking workflow steps that are computed in their individual containers. For a general introduction to *OpenEBench benchmarking workflows* see the main benchmarking workflow [README][readme]. For a more detailed description on the example EuCanImage Brain Cancer Diagnosis Benchmarking Workflow see [Brain Cancer Diagnosis benchmarking workflow readme][bcd-bwf].
 
 > **NOTE for developers:**
 > In order to make the workflow containers reproducible and stable in the long-term, make sure to use specific versions in the container base image (e.g.*ubuntu:20.04*, NOT *ubuntu:latest*).
@@ -35,8 +35,8 @@ To build the docker images locally by either of the following two methods:
 1. Go to the [`docker_recipes/`] directory and run the following
    (note: the `tag_id` should match the one in your [`nextflow.config`][nextflow-config])
 
-```
-run `./build.sh <tag_id>`
+```bash
+./build.sh <tag_id>
 ```
 
 2. Go to the specific docker directory for each step in `docker_recipes/`:
@@ -44,7 +44,7 @@ run `./build.sh <tag_id>`
 - `validation/`, `metrics/`, or `consolidation/`
   and run the following
 
-```
+```bash
 docker build . -t [community]/[validation OR metrics OR consolidation]:<tag_id>
 ```
 
@@ -52,7 +52,7 @@ docker build . -t [community]/[validation OR metrics OR consolidation]:<tag_id>
 
 If you want to update the docker containers, please remove your original images first:
 
-```
+```bash
 docker image ls #look for the IMAGE_ID of your docker image
 docker rmi [IMAGE_ID]
 ```

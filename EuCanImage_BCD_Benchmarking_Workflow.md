@@ -4,7 +4,7 @@
 
 ---
 
-This README describes the EucanImage **Brain Cancer Diagnosis** workflow example for an OpenEBench benchmarking workflow. For a more general introduction to benchmarking workflows see [the main benchmarking workflow `README.md`][readme-bwf]. For the specification of metrics, input and output file formats, see [the benchmarks specification][spec].
+This README describes the EucanImage Brain Cancer Diagnosis workflow example for an OpenEBench benchmarking workflow. For a more general introduction to benchmarking workflows see the main benchmarking workflow [README.md][readme]. For the specification of metrics, input and output file formats, see [the benchmarks specification][spec].
 
 - [Benchmarking Workflow Parameters](#benchmarking-workflow-parameters)
   - [1. Input data](#1-input-data)
@@ -59,14 +59,14 @@ _OpenEBench parameter(s)'name(s) defintions are case sensitive and will be integ
 
 ## (File) naming requirements
 
-See description in [the main benchmarking workflow [`README.md`][readme-naming].
+See description in [the main benchmarking workflow [README.md][readme-naming].
 
 ## Description of steps
 
 ### 1. Validation
 
 - `input_file`: output file(s) from analysis workflow (predictions file) to be uploaded as input file to benchmark.
-- Validation checks performed in [`docker_recipes/validation/validation.py`][validation-py]:
+- Validation checks performed in [docker_recipes/validation/validation.py][validation-py]:
 
   - The prediction's file(s)have to start with `brain_` and end with `.nii.gz`. In this workflow, these files are compressed in one single 'tar' file, which is used as input file.
   - Spacing and Dimensions of untarred files from input file and of goldstandar_dir files have to match.
@@ -82,7 +82,7 @@ See description in [the main benchmarking workflow [`README.md`][readme-naming].
 
   - `input_file`: predictions output file from analysis workflow in .nii.tar.gz format.
   - `gold standard`: ground truth nii.gz files.
-- EuCanImage custom functions are defined in [`docker_recipes/metrics/compute_metrics.py`][metrics-py].
+- EuCanImage custom functions are defined in [docker_recipes/metrics/compute_metrics.py][metrics-py].
 - The `assessment_results` file is obtained in the metrics computation step.
 
 ### 3. Results Consolidation
